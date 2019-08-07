@@ -1,56 +1,137 @@
 package add
 
 import (
+	"errors"
 	"fmt"
+	"io"
+
 	"github.com/spf13/cobra"
-	"k8s.io/apimachinery/pkg/util/sets"
-	"k8s.io/cli-runtime/pkg/genericclioptions"
+
 	"k8s.io/client-go/tools/clientcmd"
+	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
+	cliflag "k8s.io/component-base/cli/flag"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
-	"kubectl-plugin-ctx/pkg/cmd/list"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
 )
+
+type createContextOptions struct {
+	configAccess clientcmd.ConfigAccess
+	name         string
+	currContext  bool
+	cluster      cliflag.StringFlag
+	authInfo     cliflag.StringFlag
+	namespace    cliflag.StringFlag
+}
 
 var (
-	//listContextsLong = templates.LongDesc(`Displays one or many contexts from the kubeconfig file.`)
-	//
-	//listContextsExample = templates.Examples(`
-	//	# List all the contexts in your kubeconfig file
-	//	kubectl config get-contexts
-	//	# Describe one context in your kubeconfig file.
-	//	kubectl config get-contexts my-context`)
+	createContextLong = templates.LongDesc(`
+		Sets a context entry in kubeconfig
+		Specifying a name that already exists will merge new fields on top of existing values for those fields.`)
+
+	createContextExample = templates.Examples(`
+		# Set the user field on the gce context entry without touching other values
+		kubectl config set-context gce --user=cluster-admin`)
 )
 
-// NewCmdConfigListContexts creates a command object for the "get-contexts" action, which
-// retrieves one or more contexts from a kubeconfig.
-func NewCmdCfgAddContext(streams genericclioptions.IOStreams, configAccess clientcmd.ConfigAccess) *cobra.Command {
-	options := &list.ListOptions{
-		//configAccess: configAccess,
-		//IOStreams: streams,
-	}
+// NewCmdConfigSetContext returns a Command instance for 'config set-context' sub command
+func NewCmdCfgAddContext(out io.Writer, configAccess clientcmd.ConfigAccess) *cobra.Command {
+	options := &createContextOptions{configAccess: configAccess}
 
 	cmd := &cobra.Command{
-		Use:                   "cfg list [(-o|--output=)name)]",
+		Use:                   fmt.Sprintf("context [NAME | --current] [--%v=cluster_nickname] [--%v=user_nickname] [--%v=namespace]", clientcmd.FlagClusterName, clientcmd.FlagAuthInfoName, clientcmd.FlagNamespace),
 		DisableFlagsInUseLine: true,
-		Short:                 "Describe one or many contexts",
-		Long:                  "listContextsLong",
-		Example:               "listContextsExample",
+		Short:                 i18n.T("Sets a context entry in kubeconfig"),
+		Long:                  createContextLong,
+		Example:               createContextExample,
 		Run: func(cmd *cobra.Command, args []string) {
-			validOutputTypes := sets.NewString("", "json", "yaml", "wide", "name", "custom-columns", "custom-columns-file", "go-template", "go-template-file", "jsonpath", "jsonpath-file")
-			supportedOutputTypes := sets.NewString("", "name")
-			outputFormat := cmdutil.GetFlagString(cmd, "output")
-			if !validOutputTypes.Has(outputFormat) {
-				cmdutil.CheckErr(fmt.Errorf("output must be one of '' or 'name': %v", outputFormat))
+			cmdutil.CheckErr(options.complete(cmd))
+			name, exists, err := options.run()
+			cmdutil.CheckErr(err)
+			if exists {
+				fmt.Fprintf(out, "Context %q modified.\n", name)
+			} else {
+				fmt.Fprintf(out, "Context %q created.\n", name)
 			}
-			if !supportedOutputTypes.Has(outputFormat) {
-				fmt.Fprintf(options.Out, "--output %v is not available in kubectl config get-contexts; resetting to default output format\n", outputFormat)
-				cmd.Flags().Set("output", "")
-			}
-			cmdutil.CheckErr(options.Complete(cmd, args))
-			//cmdutil.CheckErr(options.RunListContexts())
 		},
 	}
 
-	cmd.Flags().Bool("no-headers", false, "When using the default or custom-column output format, don't print headers (default print headers).")
-	cmd.Flags().StringP("output", "o", "", "Output format. One of: name")
+	cmd.Flags().BoolVar(&options.currContext, "current", options.currContext, "Modify the current context")
+	cmd.Flags().Var(&options.cluster, clientcmd.FlagClusterName, clientcmd.FlagClusterName+" for the context entry in kubeconfig")
+	cmd.Flags().Var(&options.authInfo, clientcmd.FlagAuthInfoName, clientcmd.FlagAuthInfoName+" for the context entry in kubeconfig")
+	cmd.Flags().Var(&options.namespace, clientcmd.FlagNamespace, clientcmd.FlagNamespace+" for the context entry in kubeconfig")
+
 	return cmd
+}
+
+func (o createContextOptions) run() (string, bool, error) {
+	err := o.validate()
+	if err != nil {
+		return "", false, err
+	}
+
+	config, err := o.configAccess.GetStartingConfig()
+	if err != nil {
+		return "", false, err
+	}
+
+	name := o.name
+	if o.currContext {
+		if len(config.CurrentContext) == 0 {
+			return "", false, errors.New("no current context is set")
+		}
+		name = config.CurrentContext
+	}
+
+	startingStanza, exists := config.Contexts[name]
+	if !exists {
+		startingStanza = clientcmdapi.NewContext()
+	}
+	context := o.modifyContext(*startingStanza)
+	config.Contexts[name] = &context
+
+	if err := clientcmd.ModifyConfig(o.configAccess, *config, true); err != nil {
+		return name, exists, err
+	}
+
+	return name, exists, nil
+}
+
+func (o *createContextOptions) modifyContext(existingContext clientcmdapi.Context) clientcmdapi.Context {
+	modifiedContext := existingContext
+
+	if o.cluster.Provided() {
+		modifiedContext.Cluster = o.cluster.Value()
+	}
+	if o.authInfo.Provided() {
+		modifiedContext.AuthInfo = o.authInfo.Value()
+	}
+	if o.namespace.Provided() {
+		modifiedContext.Namespace = o.namespace.Value()
+	}
+
+	return modifiedContext
+}
+
+func (o *createContextOptions) complete(cmd *cobra.Command) error {
+	args := cmd.Flags().Args()
+	if len(args) > 1 {
+		//return helpErrorf(cmd, "Unexpected args: %v", args)
+		return nil
+	}
+	if len(args) == 1 {
+		o.name = args[0]
+	}
+	return nil
+}
+
+func (o createContextOptions) validate() error {
+	if len(o.name) == 0 && !o.currContext {
+		return errors.New("you must specify a non-empty context name or --current")
+	}
+	if len(o.name) > 0 && o.currContext {
+		return errors.New("you cannot specify both a context name and --current")
+	}
+
+	return nil
 }

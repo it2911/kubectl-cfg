@@ -11,13 +11,13 @@ import (
 )
 
 var (
-	//listContextsLong = templates.LongDesc(`Displays one or many contexts from the kubeconfig file.`)
-	//
-	//listContextsExample = templates.Examples(`
-	//	# List all the contexts in your kubeconfig file
-	//	kubectl config get-contexts
-	//	# Describe one context in your kubeconfig file.
-	//	kubectl config get-contexts my-context`)
+//listContextsLong = templates.LongDesc(`Displays one or many contexts from the kubeconfig file.`)
+//
+//listContextsExample = templates.Examples(`
+//	# List all the contexts in your kubeconfig file
+//	kubectl config get-contexts
+//	# Describe one context in your kubeconfig file.
+//	kubectl config get-contexts my-context`)
 )
 
 // NewCmdConfigListContexts creates a command object for the "get-contexts" action, which
@@ -29,7 +29,7 @@ func NewCmdCfgDeleteContext(streams genericclioptions.IOStreams, configAccess cl
 	}
 
 	cmd := &cobra.Command{
-		Use:                   "cfg list [(-o|--output=)name)]",
+		Use:                   "context [(-o|--output=)name)]",
 		DisableFlagsInUseLine: true,
 		Short:                 "Describe one or many contexts",
 		Long:                  "listContextsLong",

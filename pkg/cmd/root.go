@@ -3,6 +3,9 @@ package cmd
 import (
 	"fmt"
 	"k8s.io/kubectl/pkg/util/templates"
+	"kubectl-plugin-ctx/pkg/cmd/add"
+	"kubectl-plugin-ctx/pkg/cmd/delete"
+	"kubectl-plugin-ctx/pkg/cmd/get"
 	"kubectl-plugin-ctx/pkg/cmd/list"
 	"kubectl-plugin-ctx/pkg/cmd/use"
 	"path"
@@ -40,29 +43,11 @@ func NewCmdCfg(f cmdutil.Factory, pathOptions *clientcmd.PathOptions, streams ge
 	cmd.PersistentFlags().StringVar(&pathOptions.LoadingRules.ExplicitPath, pathOptions.ExplicitFileFlag, pathOptions.LoadingRules.ExplicitPath, "use a particular kubeconfig file")
 
 	// TODO(juanvallejo): update all subcommands to work with genericclioptions.IOStreams
+	cmd.AddCommand(add.NewCmdCfgAdd(streams, pathOptions))
+	cmd.AddCommand(delete.NewCmdCfgDelete(streams, pathOptions))
+	cmd.AddCommand(get.NewCmdCfgGet(streams, pathOptions))
 	cmd.AddCommand(list.NewCmdCfgList(streams, pathOptions))
 	cmd.AddCommand(use.NewCmdCfgUseContext(streams.Out, pathOptions))
-	//cmd.AddCommand(NewCmdCfgAddContext(streams, pathOptions))
-	//cmd.AddCommand(NewCmdCfgDeleteContext(streams, pathOptions))
-	//cmd.AddCommand(NewCmdCfgGetContext(streams, pathOptions))
-
-	//cmd.AddCommand(NewCmdCfgSetContext(streams, pathOptions))
-	//cmd.AddCommand(NewCmdCfgUseContext(streams, pathOptions))
-	//
-
-
-	//cmd.AddCommand(NewCmdConfigView(f, streams, pathOptions))
-	//cmd.AddCommand(NewCmdConfigSetCluster(streams.Out, pathOptions))
-	//cmd.AddCommand(NewCmdConfigSetAuthInfo(streams.Out, pathOptions))
-	//cmd.AddCommand(NewCmdConfigSetContext(streams.Out, pathOptions))
-	//cmd.AddCommand(NewCmdConfigSet(streams.Out, pathOptions))
-	//cmd.AddCommand(NewCmdConfigUnset(streams.Out, pathOptions))
-	//cmd.AddCommand(NewCmdConfigCurrentContext(streams.Out, pathOptions))
-	//cmd.AddCommand(NewCmdConfigUseContext(streams.Out, pathOptions))
-	//cmd.AddCommand(NewCmdConfigGetClusters(streams.Out, pathOptions))
-	//cmd.AddCommand(NewCmdConfigDeleteCluster(streams.Out, pathOptions))
-	//cmd.AddCommand(NewCmdConfigDeleteContext(streams.Out, streams.ErrOut, pathOptions))
-	//cmd.AddCommand(NewCmdConfigRenameContext(streams.Out, pathOptions))
 
 	return cmd
 }
