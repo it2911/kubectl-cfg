@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/it2911/kubectl-cfg/pkg/cmd/add"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/list"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/use"
 	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/templates"
@@ -40,7 +41,7 @@ func NewCmdCfg(f cmdutil.Factory, pathOptions *clientcmd.PathOptions, streams ge
 	cmd.PersistentFlags().StringVar(&pathOptions.LoadingRules.ExplicitPath, pathOptions.ExplicitFileFlag, pathOptions.LoadingRules.ExplicitPath, "use a particular kubeconfig file")
 
 	// TODO(juanvallejo): update all subcommands to work with genericclioptions.IOStreams
-	//cmd.AddCommand(add.NewCmdCfgAdd(streams, pathOptions))
+	cmd.AddCommand(add.NewCmdCfgAdd(streams, pathOptions))
 	//cmd.AddCommand(delete.NewCmdCfgDelete(streams, pathOptions))
 	//cmd.AddCommand(get.NewCmdCfgGet(streams, pathOptions))
 	cmd.AddCommand(list.NewCmdCfgList(streams, pathOptions))
