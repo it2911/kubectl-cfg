@@ -2,12 +2,12 @@ package add
 
 import (
 	"fmt"
+	"github.com/it2911/kubectl-cfg/pkg/cmd/list"
 	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
-	"kubectl-plugin-ctx/pkg/cmd/list"
 )
 
 var (

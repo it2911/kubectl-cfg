@@ -2,12 +2,12 @@ package main
 
 import (
 	"flag"
+	"github.com/it2911/kubectl-cfg/pkg/cmd"
 	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
 	"github.com/spf13/pflag"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/klog"
-	"kubectl-plugin-ctx/pkg/cmd"
 	"os"
 )
 
