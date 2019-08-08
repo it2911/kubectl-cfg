@@ -2,14 +2,15 @@ package list
 
 import (
 	"fmt"
+	. "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/config"
+	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
+	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/templates"
 	"github.com/spf13/cobra"
 	"io"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
-	cmdutil "k8s.io/kubectl/pkg/cmd/util"
-	"k8s.io/kubectl/pkg/util/templates"
 
 	"strings"
 )
@@ -22,7 +23,7 @@ var (
 		kubectl cfg list cluster`)
 )
 
-var printClusterHeaders = func (out io.Writer, nameOnly bool) error {
+var printClusterHeaders = func(out io.Writer, nameOnly bool) error {
 	columnNames := []string{"CLUSTER_NAME", "SERVER", "CERTIFICATE_AUTHORITY_VALIDITY_FROM", "CERTIFICATE_AUTHORITY_VALIDITY_TO"}
 	if nameOnly {
 		columnNames = columnNames[:1]
@@ -47,7 +48,7 @@ var printCluster = func(name string, context *clientcmdapi.Context, w io.Writer,
 func NewCmdCfgListCluster(streams genericclioptions.IOStreams, configAccess clientcmd.ConfigAccess) *cobra.Command {
 	options := &ListOptions{
 		configAccess: configAccess,
-		IOStreams: streams,
+		IOStreams:    streams,
 	}
 
 	cmd := &cobra.Command{
@@ -71,6 +72,8 @@ func NewCmdCfgListCluster(streams genericclioptions.IOStreams, configAccess clie
 			cmdutil.CheckErr(options.RunList(printClusterHeaders, printCluster))
 		},
 	}
+
+	_ = NewCmdConfigSetCluster(nil, nil)
 
 	cmd.Flags().Bool("no-headers", false, "When using the default or custom-column output format, don't print headers (default print headers).")
 	cmd.Flags().StringP("output", "o", "", "Output format. One of: name")

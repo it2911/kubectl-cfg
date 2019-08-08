@@ -2,14 +2,14 @@ package list
 
 import (
 	"fmt"
+	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
+	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/templates"
 	"github.com/spf13/cobra"
 	"io"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
-	cmdutil "k8s.io/kubectl/pkg/cmd/util"
-	"k8s.io/kubectl/pkg/util/templates"
 	"strings"
 )
 
@@ -20,7 +20,6 @@ var (
 		# List all the contexts in your kubeconfig file
 		kubectl cfg list context`)
 )
-
 
 var printContextHeaders = func(out io.Writer, nameOnly bool) error {
 	columnNames := []string{"CURRENT", "CONTEXT_NAME", "CLUSTER_NAME", "AUTH_INFO", "DEFAULT_NAMESPACE"}
@@ -49,7 +48,7 @@ var printContext = func(name string, context *clientcmdapi.Context, w io.Writer,
 func NewCmdCfgListContext(streams genericclioptions.IOStreams, configAccess clientcmd.ConfigAccess) *cobra.Command {
 	options := &ListOptions{
 		configAccess: configAccess,
-		IOStreams: streams,
+		IOStreams:    streams,
 	}
 
 	cmd := &cobra.Command{

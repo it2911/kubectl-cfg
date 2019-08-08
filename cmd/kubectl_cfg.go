@@ -2,11 +2,11 @@ package main
 
 import (
 	"flag"
+	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
 	"github.com/spf13/pflag"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/klog"
-	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	"kubectl-plugin-ctx/pkg/cmd"
 	"os"
 )
@@ -22,8 +22,8 @@ func main() {
 	pflag.CommandLine = flags
 
 	root := cmd.NewCmdCfg(cmdutil.NewFactory(genericclioptions.NewTestConfigFlags()),
-								clientcmd.NewDefaultPathOptions(),
-								genericclioptions.IOStreams{In: os.Stdin, Out: os.Stdout, ErrOut: os.Stderr})
+		clientcmd.NewDefaultPathOptions(),
+		genericclioptions.IOStreams{In: os.Stdin, Out: os.Stdout, ErrOut: os.Stderr})
 
 	if err := root.Execute(); err != nil {
 		os.Exit(1)

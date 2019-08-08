@@ -2,14 +2,14 @@ package list
 
 import (
 	"fmt"
+	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
+	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/templates"
 	"github.com/spf13/cobra"
 	"io"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
-	cmdutil "k8s.io/kubectl/pkg/cmd/util"
-	"k8s.io/kubectl/pkg/util/templates"
 
 	"strings"
 )
@@ -21,7 +21,6 @@ var (
 		# List all the users in your kubeconfig file
 		kubectl cfg list user`)
 )
-
 
 var printUserHeaders = func(out io.Writer, nameOnly bool) error {
 	columnNames := []string{"CURRENT", "CONTEXT NAME", "CLUSTER NAME", "USER NAME", "DEFAULT NAMESPACE"}
@@ -48,7 +47,7 @@ var printUser = func(name string, context *clientcmdapi.Context, w io.Writer, na
 func NewCmdCfgListUser(streams genericclioptions.IOStreams, configAccess clientcmd.ConfigAccess) *cobra.Command {
 	options := &ListOptions{
 		configAccess: configAccess,
-		IOStreams: streams,
+		IOStreams:    streams,
 	}
 
 	cmd := &cobra.Command{
@@ -69,7 +68,7 @@ func NewCmdCfgListUser(streams genericclioptions.IOStreams, configAccess clientc
 				cmd.Flags().Set("output", "")
 			}
 			cmdutil.CheckErr(options.Complete(cmd, args))
-			cmdutil.CheckErr(options.RunList(printUserHeaders,printUser))
+			cmdutil.CheckErr(options.RunList(printUserHeaders, printUser))
 		},
 	}
 

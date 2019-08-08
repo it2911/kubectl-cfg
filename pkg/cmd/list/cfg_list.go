@@ -2,6 +2,8 @@ package list
 
 import (
 	"fmt"
+	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
+	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/printers"
 	"github.com/liggitt/tabwriter"
 	"github.com/spf13/cobra"
 	"io"
@@ -10,8 +12,6 @@ import (
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
-	cmdutil "k8s.io/kubectl/pkg/cmd/util"
-	"k8s.io/kubectl/pkg/util/printers"
 	"sort"
 )
 
@@ -28,7 +28,7 @@ type ListOptions struct {
 func NewCmdCfgList(streams genericclioptions.IOStreams, configAccess clientcmd.ConfigAccess) *cobra.Command {
 	options := &ListOptions{
 		configAccess: configAccess,
-		IOStreams: streams,
+		IOStreams:    streams,
 	}
 
 	cmd := &cobra.Command{
@@ -62,7 +62,6 @@ func NewCmdCfgList(streams genericclioptions.IOStreams, configAccess clientcmd.C
 	return cmd
 }
 
-
 // Complete assigns ListContextsOptions from the args.
 func (o *ListOptions) Complete(cmd *cobra.Command, args []string) error {
 	o.contextNames = args
@@ -80,7 +79,7 @@ func (o *ListOptions) Complete(cmd *cobra.Command, args []string) error {
 
 // RunListContexts implements all the necessary functionality for context retrieval.
 func (o *ListOptions) RunList(printHeaders func(out io.Writer, nameOnly bool) error,
-			print func(name string, context *clientcmdapi.Context, w io.Writer, nameOnly, current bool) error) error {
+	print func(name string, context *clientcmdapi.Context, w io.Writer, nameOnly, current bool) error) error {
 
 	config, err := o.configAccess.GetStartingConfig()
 	if err != nil {

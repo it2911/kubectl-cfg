@@ -2,11 +2,11 @@ package add
 
 import (
 	"fmt"
+	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
 	"github.com/spf13/cobra"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
-	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	"kubectl-plugin-ctx/pkg/cmd/list"
 )
 
@@ -29,9 +29,9 @@ func NewCmdCfgAddConfig(streams genericclioptions.IOStreams, configAccess client
 	}
 
 	cmd := &cobra.Command{
-		Use:                   "config [(-o|--output=)name)]",
+		Use:                   fmt.Sprintf("config [INPUT_KUBECONFIG_FILE | -f] [INPUT_KUBECONFIG_FILE | -o]"),
 		DisableFlagsInUseLine: true,
-		Short:                 "Describe one or many contexts",
+		Short:                 " one or many contexts",
 		Long:                  "listContextsLong",
 		Example:               "listContextsExample",
 		Run: func(cmd *cobra.Command, args []string) {

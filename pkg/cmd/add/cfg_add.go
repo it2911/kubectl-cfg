@@ -18,9 +18,9 @@ func NewCmdCfgAdd(streams genericclioptions.IOStreams, configAccess clientcmd.Co
 
 		},
 	}
-	cmd.AddCommand(NewCmdCfgAddCluster(streams, configAccess))
+	//cmd.AddCommand(NewCmdCfgAddCluster(streams, configAccess))
 	cmd.AddCommand(NewCmdCfgAddConfig(streams, configAccess))
 	cmd.AddCommand(NewCmdCfgAddContext(streams.Out, configAccess))
-	cmd.AddCommand(NewCmdCfgAddUser(streams, configAccess))
+	//cmd.AddCommand(NewCmdCfgAddUser(streams, configAccess))
 	return cmd
 }
