@@ -11,6 +11,7 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 	"strings"
+	"github.com/fatih/color"
 )
 
 var (
@@ -35,12 +36,16 @@ var printContext = func(name string, context *clientcmdapi.Context, w io.Writer,
 		_, err := fmt.Fprintf(w, "%s\n", name)
 		return err
 	}
+
 	prefix := " "
 	if current {
 		prefix = "*"
+		_, err := color.New(color.FgYellow).Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, context.Cluster, context.AuthInfo, context.Namespace)
+		return err
+	} else {
+		_, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, context.Cluster, context.AuthInfo, context.Namespace)
+		return err
 	}
-	_, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, context.Cluster, context.AuthInfo, context.Namespace)
-	return err
 }
 
 // NewCmdConfigListContexts creates a command object for the "get-contexts" action, which

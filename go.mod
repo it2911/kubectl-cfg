@@ -1,10 +1,12 @@
 module github.com/it2911/kubectl-cfg
 
 require (
+	github.com/fatih/color v1.7.0
 	github.com/google/pprof v0.0.0-20190723021845-34ac40c74b70 // indirect
 	github.com/ianlancetaylor/demangle v0.0.0-20181102032728-5e5cf60278f6 // indirect
 	github.com/it2911/kubectl-for-plugin-cfg v0.0.0-20190808090532-d94c8ccdde3f
 	github.com/liggitt/tabwriter v0.0.0-20181228230101-89fcab3d43de
+	github.com/mattn/go-colorable v0.1.2 // indirect
 	github.com/spf13/cobra v0.0.4
 	github.com/spf13/pflag v1.0.3
 	golang.org/x/arch v0.0.0-20190312162104-788fe5ffcd8c // indirect
