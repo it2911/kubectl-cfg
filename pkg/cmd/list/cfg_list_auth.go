@@ -10,44 +10,44 @@ import (
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
-	. "k8s.io/kubectl/pkg/cmd/config"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	"k8s.io/kubectl/pkg/util/printers"
 	"k8s.io/kubectl/pkg/util/templates"
 	"sort"
+
 	"strings"
 )
 
 var (
-	listClustersLong = templates.LongDesc(`Displays one or many clusters from the kubeconfig file.`)
+	listAuthInfoLong = templates.LongDesc(`Displays one or many authInfo from the kubeconfig file.`)
 
-	listClustersExample = templates.Examples(`
-		# List all the clusters in your kubeconfig file
-		kubectl cfg list cluster`)
+	listAuthInfoExample = templates.Examples(`
+		# List all the authInfo in your kubeconfig file
+		kubectl cfg list auth`)
 )
 
-// ListClusterOptions contains the assignable options from the args.
-type ListClusterOptions struct {
+// ListAuthInfoOptions contains the assignable options from the args.
+type ListAuthInfoOptions struct {
 	configAccess clientcmd.ConfigAccess
 	nameOnly     bool
 	showHeaders  bool
-	clusterNames []string
+	authInfos    []string
 
 	genericclioptions.IOStreams
 }
 
-func NewCmdCfgListCluster(streams genericclioptions.IOStreams, configAccess clientcmd.ConfigAccess) *cobra.Command {
-	options := &ListClusterOptions{
+func NewCmdCfgListAuthInfo(streams genericclioptions.IOStreams, configAccess clientcmd.ConfigAccess) *cobra.Command {
+	options := &ListAuthInfoOptions{
 		configAccess: configAccess,
 		IOStreams:    streams,
 	}
 
 	cmd := &cobra.Command{
-		Use:                   "cluster",
+		Use:                   "auth",
 		DisableFlagsInUseLine: true,
-		Short:                 "Describe one or many clusters",
-		Long:                  listClustersLong,
-		Example:               listClustersExample,
+		Short:                 "Describe one or many authInfo",
+		Long:                  listAuthInfoLong,
+		Example:               listAuthInfoExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			validOutputTypes := sets.NewString("", "json", "yaml", "wide", "name", "custom-columns", "custom-columns-file", "go-template", "go-template-file", "jsonpath", "jsonpath-file")
 			supportedOutputTypes := sets.NewString("", "name")
@@ -64,16 +64,14 @@ func NewCmdCfgListCluster(streams genericclioptions.IOStreams, configAccess clie
 		},
 	}
 
-	_ = NewCmdConfigSetCluster(nil, nil)
-
 	cmd.Flags().Bool("no-headers", false, "When using the default or custom-column output format, don't print headers (default print headers).")
 	cmd.Flags().StringP("output", "o", "", "Output format. One of: name")
 	return cmd
 }
 
 // Complete assigns ListClustersOptions from the args.
-func (o *ListClusterOptions) Complete(cmd *cobra.Command, args []string) error {
-	o.clusterNames = args
+func (o *ListAuthInfoOptions) Complete(cmd *cobra.Command, args []string) error {
+	o.authInfos = args
 	o.nameOnly = false
 	if cmdutil.GetFlagString(cmd, "output") == "name" {
 		o.nameOnly = true
@@ -87,7 +85,7 @@ func (o *ListClusterOptions) Complete(cmd *cobra.Command, args []string) error {
 }
 
 // RunList implements all the necessary functionality for cluster retrieval.
-func (o *ListClusterOptions) RunList() error {
+func (o *ListAuthInfoOptions) RunList() error {
 
 	config, err := o.configAccess.GetStartingConfig()
 	if err != nil {
@@ -104,13 +102,13 @@ func (o *ListClusterOptions) RunList() error {
 	// Do this before printing the headers so it doesn't look ugly.
 	allErrs := []error{}
 	toPrint := []string{}
-	if len(o.clusterNames) == 0 {
-		for name := range config.Clusters {
+	if len(o.authInfos) == 0 {
+		for name := range config.AuthInfos {
 			toPrint = append(toPrint, name)
 		}
 	} else {
-		for _, name := range o.clusterNames {
-			_, ok := config.Clusters[name]
+		for _, name := range o.authInfos {
+			_, ok := config.AuthInfos[name]
 			if ok {
 				toPrint = append(toPrint, name)
 			} else {
@@ -119,7 +117,7 @@ func (o *ListClusterOptions) RunList() error {
 		}
 	}
 	if o.showHeaders {
-		err = printClusterHeaders(out, o.nameOnly)
+		err = printAuthInfoHeaders(out, o.nameOnly)
 		if err != nil {
 			allErrs = append(allErrs, err)
 		}
@@ -128,7 +126,7 @@ func (o *ListClusterOptions) RunList() error {
 	sort.Strings(toPrint)
 	for _, name := range toPrint {
 		currentContext := config.Contexts[config.CurrentContext]
-		err = printCluster(name, config.Clusters[name], out, o.nameOnly, currentContext.Cluster == name)
+		err = printAuthInfo(name, config.AuthInfos[name], out, o.nameOnly, currentContext.AuthInfo == name)
 		if err != nil {
 			allErrs = append(allErrs, err)
 		}
@@ -137,8 +135,8 @@ func (o *ListClusterOptions) RunList() error {
 	return utilerrors.NewAggregate(allErrs)
 }
 
-func printClusterHeaders(out io.Writer, nameOnly bool) error {
-	columnNames := []string{"CURRENT", "CLUSTER_NAME", "SERVER", "STATUS_CODE", "CERTIFICATE_AUTHORITY_VALIDITY_TO"}
+func printAuthInfoHeaders(out io.Writer, nameOnly bool) error {
+	columnNames := []string{"CURRENT", "AUTH_INFO_NAME", "USERNAME"}
 	if nameOnly {
 		columnNames = columnNames[:1]
 	}
@@ -146,7 +144,7 @@ func printClusterHeaders(out io.Writer, nameOnly bool) error {
 	return err
 }
 
-func printCluster(name string, cluster *clientcmdapi.Cluster, w io.Writer, nameOnly, current bool) error {
+func printAuthInfo(name string, authInfo *clientcmdapi.AuthInfo, w io.Writer, nameOnly, current bool) error {
 	if nameOnly {
 		_, err := fmt.Fprintf(w, "%s\n", name)
 		return err
@@ -155,14 +153,6 @@ func printCluster(name string, cluster *clientcmdapi.Cluster, w io.Writer, nameO
 	if current {
 		prefix = "*"
 	}
-
-	statusCode := "UNKNOW"
-	//resp, err := http.Get(cluster.Server)
-	//if err != nil{
-	//
-	//}
-	//statusCode = fmt.Sprint(resp.StatusCode)
-
-	_, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, cluster.Server, statusCode, "")
+	_, err := fmt.Fprintf(w, "%s\t%s\t%s\n", prefix, name, authInfo.Username)
 	return err
 }

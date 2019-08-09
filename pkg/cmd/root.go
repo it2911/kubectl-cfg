@@ -2,18 +2,21 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/it2911/kubectl-cfg/pkg/cmd/add"
+	"github.com/it2911/kubectl-cfg/pkg/cmd/delete"
+	"github.com/it2911/kubectl-cfg/pkg/cmd/get"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/list"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/use"
-	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/templates"
+	"k8s.io/kubectl/pkg/util/templates"
 	"path"
 	"strconv"
 
 	"github.com/spf13/cobra"
 
-	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
-	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/i18n"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
+	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
 )
 
 // NewCmdConfig creates a command object for the "config" action, and adds all child commands to it.
@@ -40,9 +43,9 @@ func NewCmdCfg(f cmdutil.Factory, pathOptions *clientcmd.PathOptions, streams ge
 	cmd.PersistentFlags().StringVar(&pathOptions.LoadingRules.ExplicitPath, pathOptions.ExplicitFileFlag, pathOptions.LoadingRules.ExplicitPath, "use a particular kubeconfig file")
 
 	// TODO(juanvallejo): update all subcommands to work with genericclioptions.IOStreams
-	//cmd.AddCommand(add.NewCmdCfgAdd(streams, pathOptions))
-	//cmd.AddCommand(delete.NewCmdCfgDelete(streams, pathOptions))
-	//cmd.AddCommand(get.NewCmdCfgGet(streams, pathOptions))
+	cmd.AddCommand(add.NewCmdCfgAdd(streams, pathOptions))
+	cmd.AddCommand(delete.NewCmdCfgDelete(streams, pathOptions))
+	cmd.AddCommand(get.NewCmdCfgGet(streams, pathOptions))
 	cmd.AddCommand(list.NewCmdCfgList(streams, pathOptions))
 	cmd.AddCommand(use.NewCmdCfgUseContext(streams.Out, pathOptions))
 
