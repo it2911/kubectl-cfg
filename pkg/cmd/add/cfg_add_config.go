@@ -2,10 +2,10 @@ package add
 
 import (
 	"fmt"
-	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/templates"
 	"github.com/spf13/cobra"
 	"io"
 	"k8s.io/client-go/tools/clientcmd"
+	"k8s.io/kubectl/pkg/util/templates"
 )
 
 type AddConfigOptions struct {

@@ -2,10 +2,6 @@ package list
 
 import (
 	"fmt"
-	. "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/config"
-	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
-	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/printers"
-	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/templates"
 	"github.com/liggitt/tabwriter"
 	"github.com/spf13/cobra"
 	"io"
@@ -14,6 +10,10 @@ import (
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
+	. "k8s.io/kubectl/pkg/cmd/config"
+	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/printers"
+	"k8s.io/kubectl/pkg/util/templates"
 	"sort"
 	"strings"
 )

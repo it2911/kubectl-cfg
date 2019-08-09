@@ -6,11 +6,11 @@ import (
 
 	"github.com/spf13/cobra"
 
-	kubectlconfig "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/config"
-	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
-	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/i18n"
-	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/templates"
 	"k8s.io/client-go/tools/clientcmd"
+	kubectlconfig "k8s.io/kubectl/pkg/cmd/config"
+	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/i18n"
+	"k8s.io/kubectl/pkg/util/templates"
 )
 
 var (

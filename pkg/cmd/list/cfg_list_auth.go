@@ -2,9 +2,6 @@ package list
 
 import (
 	"fmt"
-	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
-	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/printers"
-	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/templates"
 	"github.com/liggitt/tabwriter"
 	"github.com/spf13/cobra"
 	"io"
@@ -13,21 +10,24 @@ import (
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
+	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/printers"
+	"k8s.io/kubectl/pkg/util/templates"
 	"sort"
 
 	"strings"
 )
 
 var (
-	listUsersLong = templates.LongDesc(`Displays one or many users from the kubeconfig file.`)
+	listAuthInfoLong = templates.LongDesc(`Displays one or many authInfo from the kubeconfig file.`)
 
-	listUsersExample = templates.Examples(`
-		# List all the users in your kubeconfig file
-		kubectl cfg list user`)
+	listAuthInfoExample = templates.Examples(`
+		# List all the authInfo in your kubeconfig file
+		kubectl cfg list auth`)
 )
 
-// ListUsersOptions contains the assignable options from the args.
-type ListUserOptions struct {
+// ListAuthInfoOptions contains the assignable options from the args.
+type ListAuthInfoOptions struct {
 	configAccess clientcmd.ConfigAccess
 	nameOnly     bool
 	showHeaders  bool
@@ -36,8 +36,8 @@ type ListUserOptions struct {
 	genericclioptions.IOStreams
 }
 
-func NewCmdCfgListUser(streams genericclioptions.IOStreams, configAccess clientcmd.ConfigAccess) *cobra.Command {
-	options := &ListUserOptions{
+func NewCmdCfgListAuthInfo(streams genericclioptions.IOStreams, configAccess clientcmd.ConfigAccess) *cobra.Command {
+	options := &ListAuthInfoOptions{
 		configAccess: configAccess,
 		IOStreams:    streams,
 	}
@@ -45,9 +45,9 @@ func NewCmdCfgListUser(streams genericclioptions.IOStreams, configAccess clientc
 	cmd := &cobra.Command{
 		Use:                   "auth",
 		DisableFlagsInUseLine: true,
-		Short:                 "Describe one or many users",
-		Long:                  listUsersLong,
-		Example:               listUsersExample,
+		Short:                 "Describe one or many authInfo",
+		Long:                  listAuthInfoLong,
+		Example:               listAuthInfoExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			validOutputTypes := sets.NewString("", "json", "yaml", "wide", "name", "custom-columns", "custom-columns-file", "go-template", "go-template-file", "jsonpath", "jsonpath-file")
 			supportedOutputTypes := sets.NewString("", "name")
@@ -70,7 +70,7 @@ func NewCmdCfgListUser(streams genericclioptions.IOStreams, configAccess clientc
 }
 
 // Complete assigns ListClustersOptions from the args.
-func (o *ListUserOptions) Complete(cmd *cobra.Command, args []string) error {
+func (o *ListAuthInfoOptions) Complete(cmd *cobra.Command, args []string) error {
 	o.authInfos = args
 	o.nameOnly = false
 	if cmdutil.GetFlagString(cmd, "output") == "name" {
@@ -85,7 +85,7 @@ func (o *ListUserOptions) Complete(cmd *cobra.Command, args []string) error {
 }
 
 // RunList implements all the necessary functionality for cluster retrieval.
-func (o *ListUserOptions) RunList() error {
+func (o *ListAuthInfoOptions) RunList() error {
 
 	config, err := o.configAccess.GetStartingConfig()
 	if err != nil {
@@ -117,7 +117,7 @@ func (o *ListUserOptions) RunList() error {
 		}
 	}
 	if o.showHeaders {
-		err = printUserHeaders(out, o.nameOnly)
+		err = printAuthInfoHeaders(out, o.nameOnly)
 		if err != nil {
 			allErrs = append(allErrs, err)
 		}
@@ -126,7 +126,7 @@ func (o *ListUserOptions) RunList() error {
 	sort.Strings(toPrint)
 	for _, name := range toPrint {
 		currentContext := config.Contexts[config.CurrentContext]
-		err = printUser(name, config.AuthInfos[name], out, o.nameOnly, currentContext.AuthInfo == name)
+		err = printAuthInfo(name, config.AuthInfos[name], out, o.nameOnly, currentContext.AuthInfo == name)
 		if err != nil {
 			allErrs = append(allErrs, err)
 		}
@@ -135,7 +135,7 @@ func (o *ListUserOptions) RunList() error {
 	return utilerrors.NewAggregate(allErrs)
 }
 
-func printUserHeaders(out io.Writer, nameOnly bool) error {
+func printAuthInfoHeaders(out io.Writer, nameOnly bool) error {
 	columnNames := []string{"CURRENT", "AUTH_INFO_NAME", "USERNAME"}
 	if nameOnly {
 		columnNames = columnNames[:1]
@@ -144,7 +144,7 @@ func printUserHeaders(out io.Writer, nameOnly bool) error {
 	return err
 }
 
-func printUser(name string, authInfo *clientcmdapi.AuthInfo, w io.Writer, nameOnly, current bool) error {
+func printAuthInfo(name string, authInfo *clientcmdapi.AuthInfo, w io.Writer, nameOnly, current bool) error {
 	if nameOnly {
 		_, err := fmt.Fprintf(w, "%s\n", name)
 		return err

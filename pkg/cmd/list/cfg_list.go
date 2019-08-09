@@ -1,21 +1,19 @@
 package list
 
 import (
-	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
-	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/templates"
 	"github.com/spf13/cobra"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
+	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/templates"
 )
 
 var (
 	listLong = templates.LongDesc(`Displays one or many clusters from the kubeconfig file.`)
 
 	listExample = templates.Examples(`
-		# List all the clusters in your kubeconfig file
-		kubectl cfg list cluster
-		# List all the contexts in your kubeconfig file
-		kubectl cfg list context`)
+		# List all the resources in your kubeconfig file
+		kubectl cfg list SUB_COMMAND`)
 )
 
 func NewCmdCfgList(streams genericclioptions.IOStreams, configAccess clientcmd.ConfigAccess) *cobra.Command {
@@ -34,6 +32,6 @@ func NewCmdCfgList(streams genericclioptions.IOStreams, configAccess clientcmd.C
 
 	cmd.AddCommand(NewCmdCfgListContext(streams, configAccess))
 	cmd.AddCommand(NewCmdCfgListCluster(streams, configAccess))
-	cmd.AddCommand(NewCmdCfgListUser(streams, configAccess))
+	cmd.AddCommand(NewCmdCfgListAuthInfo(streams, configAccess))
 	return cmd
 }

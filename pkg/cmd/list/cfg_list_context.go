@@ -2,9 +2,6 @@ package list
 
 import (
 	"fmt"
-	cmdutil "github.com/it2911/kubectl-for-plugin-cfg/pkg/cmd/util"
-	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/printers"
-	"github.com/it2911/kubectl-for-plugin-cfg/pkg/util/templates"
 	"github.com/liggitt/tabwriter"
 	"github.com/spf13/cobra"
 	"io"
@@ -13,6 +10,9 @@ import (
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
+	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/printers"
+	"k8s.io/kubectl/pkg/util/templates"
 	"sort"
 	"strings"
 )
@@ -150,9 +150,12 @@ func printContext(name string, context *clientcmdapi.Context, w io.Writer, nameO
 		return err
 	}
 	prefix := " "
+	var err error
 	if current {
 		prefix = "*"
+		//	_, err = color.New(color.FgHiYellow).Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, context.Cluster, context.AuthInfo, context.Namespace)
+		//}else{
+		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, context.Cluster, context.AuthInfo, context.Namespace)
 	}
-	_, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, context.Cluster, context.AuthInfo, context.Namespace)
 	return err
 }
