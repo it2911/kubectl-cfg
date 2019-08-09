@@ -17,7 +17,7 @@ require (
 	github.com/elazarl/goproxy v0.0.0-20190711103511-473e67f1d7d2 // indirect
 	github.com/emicklei/go-restful v2.9.6+incompatible // indirect
 	github.com/evanphx/json-patch v4.5.0+incompatible // indirect
-	github.com/fatih/color v1.7.0
+	github.com/fatih/color v1.7.0 // indirect
 	github.com/fogleman/gg v1.3.0 // indirect
 	github.com/go-kit/kit v0.9.0 // indirect
 	github.com/go-openapi/swag v0.19.4 // indirect
@@ -77,4 +77,4 @@ require (
 	sigs.k8s.io/structured-merge-diff v0.0.0-20190724202554-0c1d754dd648 // indirect
 )
 
-replace k8s.io/kubectl => github.com/it2911/kubectl-for-plugin-cfg v0.0.0-20190809060756-77d2bb92af58
+replace k8s.io/kubectl => github.com/it2911/kubectl-for-plugin-cfg v0.0.0-20190809101909-2d83ea5ea016
