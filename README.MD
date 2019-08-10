@@ -2,6 +2,8 @@
 
 ![Version](https://img.shields.io/badge/version-0.0.1-blue.svg?cacheSeconds=2592000)
 [![License: Apache 2](https://img.shields.io/badge/License-Apache%202-yellow.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+![Total visitor](https://visitor-count-badge.herokuapp.com/total.svg?repo_id=kubectl-cfg)
+![Visitors in today](https://visitor-count-badge.herokuapp.com/today.svg?repo_id=kubectl-cfg)
 
 
 > kubectl cfg is a [kubectl plugin](https://github.com/kubernetes-sigs/krew) that provides you a easier way to manage the config of your Kubernetes cluster.
