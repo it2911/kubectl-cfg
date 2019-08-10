@@ -4,7 +4,7 @@
 [![License: Apache 2](https://img.shields.io/badge/License-Apache%202-yellow.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
 
 
-> kubectl cfg is a kubectl plugin that provides you a easier way to manage the config of your Kubernetes cluster.
+> kubectl cfg is a [kubectl plugin](https://github.com/kubernetes-sigs/krew) that provides you a easier way to manage the config of your Kubernetes cluster.
 
 ### 🏠 [Homepage](https://github.com/it2911/kubectl-cfg)
 
@@ -16,13 +16,22 @@ kubectl krew install kubectl-cfg
 
 ## Usage
 
+
+```sh
+kubectl cfg list context
+```
+
+![](https://raw.githubusercontent.com/77ImageHosting/repo1/master/imgrender1565399746354.gif)
+
+More information
+
 ```sh
 kubectl cfg --help
 ```
 
 ## Author
 
-👤 **[@it2911](https://github.com/it2911)** 👤 [@vinci7](https://github.com/vinci7)
+👤 [@it2911](https://github.com/it2911) 👤 [@vinci7](https://github.com/vinci7)
 
 ## 🤝 Contributing
 
