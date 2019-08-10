@@ -1,4 +1,58 @@
+# Welcome to kubectl-cfg 👋
+
+![Version](https://img.shields.io/badge/version-0.0.1-blue.svg?cacheSeconds=2592000)
+[![License: Apache 2](https://img.shields.io/badge/License-Apache%202-yellow.svg)](http://www.apache.org/licenses/LICENSE-2.0.html)
+![Total visitor](https://visitor-count-badge.herokuapp.com/total.svg?repo_id=kubectl-cfg)
+![Visitors in today](https://visitor-count-badge.herokuapp.com/today.svg?repo_id=kubectl-cfg)
+
+
+> kubectl cfg is a [kubectl plugin](https://github.com/kubernetes-sigs/krew) that provides you a easier way to manage the config of your Kubernetes cluster.
+
+### 🏠 [Homepage](https://github.com/it2911/kubectl-cfg)
+
+## Install
+
+```sh
+kubectl krew install kubectl-cfg
 ```
-$ go build -v -o kubecfg cmd/kubectl_cfg.go
-$ kubecfg list context
+
+## Usage
+
+
+```sh
+kubectl cfg list context
 ```
+
+![](https://raw.githubusercontent.com/77ImageHosting/repo1/master/imgrender1565399746354.gif)
+
+More information
+
+```sh
+kubectl cfg --help
+```
+
+## Author
+
+👤 [@it2911](https://github.com/it2911) 👤 [@vinci7](https://github.com/vinci7)
+
+## 🤝 Contributing
+
+Contributions, issues and feature requests are welcome!
+
+Feel free to check [issues page](https://github.com/it2911/kubectl-cfg/issues).
+
+## Show your support
+
+Give a ⭐️ if this project helped you!
+
+
+## 📝 License
+
+Copyright © 2019 [it2911](https://github.com/it2911).
+
+This project is [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html) licensed.
+
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
+
+

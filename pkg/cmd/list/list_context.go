@@ -15,6 +15,7 @@ import (
 	"k8s.io/kubectl/pkg/util/templates"
 	"sort"
 	"strings"
+	"github.com/fatih/color"
 )
 
 var (
