@@ -19,7 +19,7 @@ import (
 )
 
 var (
-	listClustersLong = templates.LongDesc(`Displays one or many clusters from the kubeconfig file.`)
+	listClustersLong = templates.LongDesc(`Displays cluster from the kubeconfig file.`)
 
 	listClustersExample = templates.Examples(`
 		# List all the clusters in your kubeconfig file
@@ -45,7 +45,7 @@ func NewCmdCfgListCluster(streams genericclioptions.IOStreams, configAccess clie
 	cmd := &cobra.Command{
 		Use:                   "cluster",
 		DisableFlagsInUseLine: true,
-		Short:                 "Describe one or many clusters",
+		Short:                 "Describe cluster from the kubeconfig file",
 		Long:                  listClustersLong,
 		Example:               listClustersExample,
 		Run: func(cmd *cobra.Command, args []string) {

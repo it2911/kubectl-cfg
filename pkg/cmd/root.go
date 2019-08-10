@@ -7,6 +7,7 @@ import (
 	"github.com/it2911/kubectl-cfg/pkg/cmd/list"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/merge"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/use"
+	"github.com/it2911/kubectl-cfg/pkg/cmd/version"
 	"k8s.io/kubectl/pkg/util/templates"
 	"strconv"
 
@@ -27,8 +28,9 @@ func NewCmdCfg(f cmdutil.Factory, pathOptions *clientcmd.PathOptions, streams ge
 	cmd := &cobra.Command{
 		Use:                   "cfg",
 		DisableFlagsInUseLine: true,
-		Short:                 i18n.T("Easily manage kubeconfig files"),
-		Long: templates.LongDesc(`You can use kubectl cfg command to easily manage kubeconfig file.
+
+		Short: i18n.T("Easily manage kubeconfig files"),
+		Long: templates.Examples(`You can use kubectl cfg command to easily manage kubeconfig file.
 			The command is include list, add, delete, merge, rename and update.
 			If you have some question please commit the issue to https://github.com/it2911/kubectl-cfg `),
 
@@ -45,6 +47,7 @@ func NewCmdCfg(f cmdutil.Factory, pathOptions *clientcmd.PathOptions, streams ge
 	cmd.AddCommand(list.NewCmdCfgList(streams, pathOptions))
 	cmd.AddCommand(use.NewCmdCfgUseContext(streams.Out, pathOptions))
 	cmd.AddCommand(merge.NewCmdCfgMerge(streams, pathOptions))
+	cmd.AddCommand(version.NewCmdCfgVersion(streams.Out, pathOptions))
 
 	return cmd
 }

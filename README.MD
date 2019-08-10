@@ -11,13 +11,18 @@
 ### 🏠 [Homepage](https://github.com/it2911/kubectl-cfg)
 
 ## Install
-
+Download the newest version kubectl-cfg binary file from release page. 
 ```sh
-kubectl krew install kubectl-cfg
+$ which kubectl
+/usr/local/bin/kubebuilder/bin/kubectl
+$ # copy the kubectl-cfg into some folder with kubectl.
+$ cp kubectl-cfg /usr/local/bin/kubebuilder/bin/
+$ kubectl cfg version
+kubectl-cfg current version is "v0.0.1".
 ```
+*Support the krew install way in recently.*
 
 ## Usage
-
 
 ```sh
 kubectl cfg list context
@@ -28,8 +33,39 @@ kubectl cfg list context
 More information
 
 ```sh
-kubectl cfg --help
+$ kubectl cfg -h                                
+  You can use kubectl cfg command to easily manage kubeconfig file.
+  The command is include list, add, delete, merge, rename and update.
+  If you have some question please commit the issue to https://github.com/it2911/kubectl-cfg
+
+Usage:
+  cfg
+  cfg [command]
+
+Available Commands:
+  add         Add context / cluster / authinfo into kubeconfig
+  delete      Delete context / cluster / authinfo from kubeconfig
+  help        Help about any command
+  list        Describe the contexts / clusters / authinfos information in the kubeconfig file
+  merge       Merge multi the kubeconfig files
+  use         Sets the current-context in a kubeconfig file
+
+Flags:
+  -h, --help                help for cfg
+      --kubeconfig string   use a particular kubeconfig file
+
+Use "cfg [command] --help" for more information about a command.
 ```
+## Build
+If you want to build yourself version. You can try below command.
+```
+$ go version
+go version go1.12.7 linux/amd64
+$ git clone -b v0.0.1 https://github.com/it2911/kubectl-cfg.git
+$ cd kubectl-cfg/cmd
+$ go build -o kubectl-cfg
+```
+*Support makefile in recently*
 
 ## Author
 
@@ -44,7 +80,6 @@ Feel free to check [issues page](https://github.com/it2911/kubectl-cfg/issues).
 ## Show your support
 
 Give a ⭐️ if this project helped you!
-
 
 ## 📝 License
 

@@ -18,7 +18,7 @@ import (
 const kubeconfigFlag string = "file"
 
 var (
-	addConfigLong = templates.LongDesc(`Displays one or many contexts from the kubeconfig file.`)
+	addConfigLong = templates.LongDesc(`Merge multi the kubeconfig files.`)
 
 	exampleString = `
     # Merge the kubeconfig into the output kubeconfig file
@@ -46,7 +46,7 @@ func NewCmdCfgMergeConfig(streams genericclioptions.IOStreams, ConfigAccess clie
 
 	cmd := &cobra.Command{
 		Use:     fmt.Sprintf("config [--%v=path/kubeconfg] ", kubeconfigFlag),
-		Short:   i18n.T("Display merged kubeconfig settings or a specified kubeconfig file"),
+		Short:   i18n.T("Merge multi the kubeconfig files"),
 		Long:    addConfigLong,
 		Example: addConfigExample,
 		Run: func(cmd *cobra.Command, args []string) {

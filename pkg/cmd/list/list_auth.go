@@ -19,10 +19,10 @@ import (
 )
 
 var (
-	listAuthInfoLong = templates.LongDesc(`Displays one or many authInfo from the kubeconfig file.`)
+	listAuthInfoLong = templates.LongDesc(`Displays auth info from the kubeconfig file.`)
 
 	listAuthInfoExample = templates.Examples(`
-		# List all the authInfo in your kubeconfig file
+		# List all the auth info in your kubeconfig file
 		kubectl cfg list auth`)
 )
 
@@ -45,7 +45,7 @@ func NewCmdCfgListAuthInfo(streams genericclioptions.IOStreams, configAccess cli
 	cmd := &cobra.Command{
 		Use:                   "auth",
 		DisableFlagsInUseLine: true,
-		Short:                 "Describe one or many authInfo",
+		Short:                 "Describe  auth info from the kubeconfig file",
 		Long:                  listAuthInfoLong,
 		Example:               listAuthInfoExample,
 		Run: func(cmd *cobra.Command, args []string) {

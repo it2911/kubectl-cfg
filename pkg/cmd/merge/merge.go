@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	listLong = templates.LongDesc(`Displays one or many clusters from the kubeconfig file.`)
+	listLong = templates.LongDesc(`Merge multi the kubeconfig files.`)
 
 	listExample = templates.Examples(`
 		# Merge the kubeconfig into the output kubeconfig file
@@ -21,7 +21,7 @@ func NewCmdCfgMerge(streams genericclioptions.IOStreams, configAccess clientcmd.
 	cmd := &cobra.Command{
 		Use:                   "merge",
 		DisableFlagsInUseLine: true,
-		Short:                 "merge kubernetes config file",
+		Short:                 "Merge multi the kubeconfig files",
 		Long:                  listLong,
 		Example:               listExample,
 		Run:                   cmdutil.DefaultSubCommandRun(streams.ErrOut),

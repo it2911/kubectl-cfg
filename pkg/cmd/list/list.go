@@ -9,10 +9,10 @@ import (
 )
 
 var (
-	listLong = templates.LongDesc(`Displays one or many clusters from the kubeconfig file.`)
+	listLong = templates.LongDesc(`Displays the contexts / clusters / authinfos information in the kubeconfig file.`)
 
 	listExample = templates.Examples(`
-		# List all the resources in your kubeconfig file
+		# List the resources in your kubeconfig file
 		kubectl cfg list SUB_COMMAND`)
 )
 
@@ -21,7 +21,7 @@ func NewCmdCfgList(streams genericclioptions.IOStreams, configAccess clientcmd.C
 	cmd := &cobra.Command{
 		Use:                   "list",
 		DisableFlagsInUseLine: true,
-		Short:                 "Describe one or many contexts",
+		Short:                 "Describe the contexts / clusters / authinfos information in the kubeconfig file",
 		Long:                  listLong,
 		Example:               listExample,
 		Run:                   cmdutil.DefaultSubCommandRun(streams.ErrOut),

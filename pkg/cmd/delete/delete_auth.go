@@ -6,6 +6,13 @@ import (
 	"io"
 	"k8s.io/client-go/tools/clientcmd"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
+	"k8s.io/kubectl/pkg/util/templates"
+)
+
+var (
+	deleteAuthinfoExample = templates.Examples(`
+		# Delete the minikube cluster
+		kubectl cfg delete cluster minikube`)
 )
 
 func NewCmdCfgDeleteUser(out, errOut io.Writer, configAccess clientcmd.ConfigAccess) *cobra.Command {
@@ -13,9 +20,9 @@ func NewCmdCfgDeleteUser(out, errOut io.Writer, configAccess clientcmd.ConfigAcc
 	cmd := &cobra.Command{
 		Use:                   "auth AUTHINFO_NAME",
 		DisableFlagsInUseLine: true,
-		Short:                 "Describe one or many contexts",
-		Long:                  "listContextsLong",
-		Example:               "listContextsExample",
+		Short:                 "Delete the specified authinfo from the kubeconfig",
+		Long:                  "Delete the specified authinfo from the kubeconfig",
+		Example:               deleteAuthinfoExample,
 		Run: func(cmd *cobra.Command, args []string) {
 			cmdutil.CheckErr(RunDeleteAuthInfo(out, errOut, configAccess, cmd))
 		},
