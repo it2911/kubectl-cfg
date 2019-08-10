@@ -22,9 +22,7 @@ kubectl cfg --help
 
 ## Author
 
-👤 **it2911**
-
-* Github: [@it2911](https://github.com/it2911)
+👤 **[@it2911](https://github.com/it2911)** 👤 [@vinci7](https://github.com/vinci7)
 
 ## 🤝 Contributing
 
@@ -45,9 +43,5 @@ This project is [Apache 2](http://www.apache.org/licenses/LICENSE-2.0.html) lice
 
 ***
 _This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_
-<<<<<<< HEAD
-
-=======
->>>>>>> afaff1657596e871b12d0cebb5b203333b2cfd83
 
 
