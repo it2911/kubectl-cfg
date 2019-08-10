@@ -28,7 +28,8 @@ func NewCmdCfgDelete(streams genericclioptions.IOStreams, configAccess clientcmd
 		Run:                   cmdutil.DefaultSubCommandRun(streams.ErrOut),
 	}
 	cmd.AddCommand(NewCmdCfgDeleteCluster(streams.Out, configAccess))
-	//cmd.AddCommand(NewCmdCfgDeleteContext(streams.Out streams.ErrOut, configAccess))
-	cmd.AddCommand(NewCmdCfgDeleteUser(streams, configAccess))
+	cmd.AddCommand(NewCmdCfgDeleteContext(streams.Out, streams.ErrOut, configAccess))
+	cmd.AddCommand(NewCmdCfgDeleteUser(streams.Out, streams.ErrOut, configAccess))
+
 	return cmd
 }

@@ -77,4 +77,4 @@ require (
 	sigs.k8s.io/structured-merge-diff v0.0.0-20190724202554-0c1d754dd648 // indirect
 )
 
-replace k8s.io/kubectl => github.com/it2911/kubectl-for-plugin-cfg v0.0.0-20190809101909-2d83ea5ea016
+replace k8s.io/kubectl => github.com/it2911/kubectl-for-plugin-cfg v0.0.0-20190809130647-038031d2e04b

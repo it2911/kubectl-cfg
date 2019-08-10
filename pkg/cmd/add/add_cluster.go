@@ -17,12 +17,12 @@ var (
 		Specifying a name that already exists will merge new fields on top of existing values for those fields.`)
 
 	addClusterExample = templates.Examples(`
-		# Set only the server field on the e2e cluster entry without touching other values.
-		kubectl cfg add cluster e2e --server=https://1.2.3.4
-		# Embed certificate authority data for the e2e cluster entry
-		kubectl cfg add cluster e2e --certificate-authority=~/.kube/e2e/kubernetes.ca.crt
+		# Set only the server field on the CLUSTER_NAME cluster entry without touching other values.
+		kubectl cfg add cluster CLUSTER_NAME --server=https://1.2.3.4
+		# Embed certificate authority data for the CLUSTER_NAME cluster entry
+		kubectl cfg add cluster CLUSTER_NAME --certificate-authority=~/.kube/e2e/kubernetes.ca.crt
 		# Disable cert checking for the dev cluster entry
-		kubectl cfg add cluster e2e --insecure-skip-tls-verify=true`)
+		kubectl cfg add cluster CLUSTER_NAME --insecure-skip-tls-verify=true`)
 )
 
 // NewCmdConfigSetCluster returns a Command instance for 'config set-cluster' sub command

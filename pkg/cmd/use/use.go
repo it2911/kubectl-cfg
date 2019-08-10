@@ -19,7 +19,7 @@ var (
 		kubectl cfg use example-context`)
 )
 
-// NewCmdConfigUseContext returns a Command instance for 'config use-context' sub command
+// NewCmdCfgUseContext returns a Command instance for 'config use-context' sub command
 func NewCmdCfgUseContext(out io.Writer, configAccess clientcmd.ConfigAccess) *cobra.Command {
 	options := &kconf.UseContextOptions{ConfigAccess: configAccess}
 

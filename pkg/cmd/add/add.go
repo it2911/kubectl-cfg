@@ -26,9 +26,10 @@ func NewCmdCfgAdd(streams genericclioptions.IOStreams, configAccess clientcmd.Co
 		Example:               addExample,
 		Run:                   cmdutil.DefaultSubCommandRun(streams.ErrOut),
 	}
-	cmd.AddCommand(NewCmdCfgAddConfig(streams.Out, configAccess))
+	//cmd.AddCommand(merge.NewCmdCfgAddConfig(cmdutil.NewFactory(genericclioptions.NewTestConfigFlags()), streams, configAccess))
 	cmd.AddCommand(NewCmdCfgAddContext(streams.Out, configAccess))
 	cmd.AddCommand(NewCmdCfgAddCluster(streams.Out, configAccess))
 	cmd.AddCommand(NewCmdCfgAddAuthInfo(streams.Out, configAccess))
+
 	return cmd
 }

@@ -4,11 +4,10 @@ import (
 	"fmt"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/add"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/delete"
-	"github.com/it2911/kubectl-cfg/pkg/cmd/get"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/list"
+	"github.com/it2911/kubectl-cfg/pkg/cmd/merge"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/use"
 	"k8s.io/kubectl/pkg/util/templates"
-	"path"
 	"strconv"
 
 	"github.com/spf13/cobra"
@@ -28,13 +27,10 @@ func NewCmdCfg(f cmdutil.Factory, pathOptions *clientcmd.PathOptions, streams ge
 	cmd := &cobra.Command{
 		Use:                   "cfg",
 		DisableFlagsInUseLine: true,
-		Short:                 i18n.T("Modify kubeconfig files"),
-		Long: templates.LongDesc(`
-			Modify kubeconfig files using subcommands like "kubectl config set current-context my-context"
-			The loading order follows these rules:
-			1. If the --` + pathOptions.ExplicitFileFlag + ` flag is set, then only that file is loaded. The flag may only be set once and no merging takes place.
-			2. If $` + pathOptions.EnvVar + ` environment variable is set, then it is used as a list of paths (normal path delimiting rules for your system). These paths are merged. When a value is modified, it is modified in the file that defines the stanza. When a value is created, it is created in the first file that exists. If no files in the chain exist, then it creates the last file in the list.
-			3. Otherwise, ` + path.Join("${HOME}", pathOptions.GlobalFileSubpath) + ` is used and no merging takes place.`),
+		Short:                 i18n.T("Easily manage kubeconfig files"),
+		Long: templates.LongDesc(`You can use kubectl cfg command to easily manage kubeconfig file.
+			The command is include list, add, delete, merge, rename and update.
+			If you have some question please commit the issue to https://github.com/it2911/kubectl-cfg `),
 
 		Run: cmdutil.DefaultSubCommandRun(streams.ErrOut),
 	}
@@ -45,9 +41,10 @@ func NewCmdCfg(f cmdutil.Factory, pathOptions *clientcmd.PathOptions, streams ge
 	// TODO(juanvallejo): update all subcommands to work with genericclioptions.IOStreams
 	cmd.AddCommand(add.NewCmdCfgAdd(streams, pathOptions))
 	cmd.AddCommand(delete.NewCmdCfgDelete(streams, pathOptions))
-	cmd.AddCommand(get.NewCmdCfgGet(streams, pathOptions))
+	//cmd.AddCommand(get.NewCmdCfgGet(streams, pathOptions))
 	cmd.AddCommand(list.NewCmdCfgList(streams, pathOptions))
 	cmd.AddCommand(use.NewCmdCfgUseContext(streams.Out, pathOptions))
+	cmd.AddCommand(merge.NewCmdCfgMerge(streams, pathOptions))
 
 	return cmd
 }
