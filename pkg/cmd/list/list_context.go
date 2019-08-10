@@ -15,11 +15,10 @@ import (
 	"k8s.io/kubectl/pkg/util/templates"
 	"sort"
 	"strings"
-	"github.com/fatih/color"
 )
 
 var (
-	listContextsLong = templates.LongDesc(`Displays one or many contexts from the kubeconfig file.`)
+	listContextsLong = templates.LongDesc(`Displays context from the kubeconfig file.`)
 
 	listContextsExample = templates.Examples(`
 		# List all the contexts in your kubeconfig file
@@ -47,7 +46,7 @@ func NewCmdCfgListContext(streams genericclioptions.IOStreams, configAccess clie
 	cmd := &cobra.Command{
 		Use:                   "context",
 		DisableFlagsInUseLine: true,
-		Short:                 "Describe one or many contexts",
+		Short:                 "Describe context from the kubeconfig file",
 		Long:                  listContextsLong,
 		Example:               listContextsExample,
 		Run: func(cmd *cobra.Command, args []string) {

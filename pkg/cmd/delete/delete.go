@@ -9,7 +9,7 @@ import (
 )
 
 var (
-	deleteLong = templates.LongDesc(`Displays one or many clusters from the kubeconfig file.`)
+	deleteLong = templates.LongDesc(`Delete context / cluster / authinfo from the kubeconfig file.`)
 
 	deleteExample = templates.Examples(`
 		# Delete the resource in your kubeconfig file.
@@ -22,7 +22,7 @@ func NewCmdCfgDelete(streams genericclioptions.IOStreams, configAccess clientcmd
 	cmd := &cobra.Command{
 		Use:                   "delete",
 		DisableFlagsInUseLine: true,
-		Short:                 "Delete resource from kubeconfig.",
+		Short:                 "Delete context / cluster / authinfo from kubeconfig",
 		Long:                  deleteLong,
 		Example:               deleteExample,
 		Run:                   cmdutil.DefaultSubCommandRun(streams.ErrOut),

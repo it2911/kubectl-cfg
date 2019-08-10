@@ -9,10 +9,10 @@ import (
 )
 
 var (
-	addLong = templates.LongDesc(`Displays one or many clusters from the kubeconfig file.`)
+	addLong = templates.LongDesc(`Create context / cluster / authinfo into the kubeconfig file.`)
 
 	addExample = templates.Examples(`
-		# List resources in your kubeconfig file
+		# Add resources into your kubeconfig file
 		kubectl cfg add SUB_COMMAND`)
 )
 
@@ -21,7 +21,7 @@ func NewCmdCfgAdd(streams genericclioptions.IOStreams, configAccess clientcmd.Co
 	cmd := &cobra.Command{
 		Use:                   "add",
 		DisableFlagsInUseLine: true,
-		Short:                 "Describe one or many contexts",
+		Short:                 "Add context / cluster / authinfo into kubeconfig",
 		Long:                  addLong,
 		Example:               addExample,
 		Run:                   cmdutil.DefaultSubCommandRun(streams.ErrOut),
