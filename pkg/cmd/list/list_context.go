@@ -11,10 +11,19 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
-	"k8s.io/kubectl/pkg/util/printers"
 	"k8s.io/kubectl/pkg/util/templates"
 	"sort"
 	"strings"
+	. "github.com/logrusorgru/aurora"
+	"github.com/juju/ansiterm"
+)
+
+const (
+	tabwriterMinWidth = 6
+	tabwriterWidth    = 4
+	tabwriterPadding  = 3
+	tabwriterPadChar  = ' '
+	tabwriterFlags    = tabwriter.RememberWidths
 )
 
 var (
@@ -93,9 +102,9 @@ func (o *ListContextOptions) RunList() error {
 		return err
 	}
 
-	out, found := o.Out.(*tabwriter.Writer)
+	out, found := o.Out.(*ansiterm.TabWriter)
 	if !found {
-		out = printers.GetNewTabWriter(o.Out)
+		out = ansiterm.NewTabWriter(o.Out, tabwriterMinWidth, tabwriterWidth, tabwriterPadding, tabwriterPadChar, tabwriterFlags)
 		defer out.Flush()
 	}
 
@@ -153,8 +162,8 @@ func printContext(name string, context *clientcmdapi.Context, w io.Writer, nameO
 	var err error
 	if current {
 		prefix = "*"
-		//	_, err = color.New(color.FgHiYellow).Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, context.Cluster, context.AuthInfo, context.Namespace)
-		//}else{
+		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", Yellow(prefix), Yellow(name), Yellow(context.Cluster), Yellow(context.AuthInfo), Yellow(context.Namespace))
+		} else {
 		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, context.Cluster, context.AuthInfo, context.Namespace)
 	}
 	return err
