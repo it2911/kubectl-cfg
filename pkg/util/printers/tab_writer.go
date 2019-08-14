@@ -3,8 +3,8 @@ package printers
 import (
 	"io"
 
-	"github.com/liggitt/tabwriter"
 	. "github.com/juju/ansiterm"
+	"github.com/liggitt/tabwriter"
 )
 
 const (

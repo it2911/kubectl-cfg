@@ -2,8 +2,14 @@ package list
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"io"
+	"sort"
+	"strings"
+
+	"github.com/it2911/kubectl-cfg/pkg/util/printers"
+	"github.com/juju/ansiterm"
+	. "github.com/logrusorgru/aurora"
+	"github.com/spf13/cobra"
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
@@ -11,13 +17,7 @@ import (
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	"k8s.io/kubectl/pkg/util/templates"
-	"sort"
-	"strings"
-	. "github.com/logrusorgru/aurora"
-	"github.com/juju/ansiterm"
-	"github.com/it2911/kubectl-cfg/pkg/util/printers"
 )
-
 
 var (
 	listContextsLong = templates.LongDesc(`Displays context from the kubeconfig file.`)
@@ -156,7 +156,7 @@ func printContext(name string, context *clientcmdapi.Context, w io.Writer, nameO
 	if current {
 		prefix = "*"
 		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", Yellow(prefix), Yellow(name), Yellow(context.Cluster), Yellow(context.AuthInfo), Yellow(context.Namespace))
-		} else {
+	} else {
 		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, context.Cluster, context.AuthInfo, context.Namespace)
 	}
 	return err

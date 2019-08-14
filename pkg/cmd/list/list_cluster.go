@@ -2,9 +2,12 @@ package list
 
 import (
 	"fmt"
+	"io"
+	"sort"
+	"strings"
+
 	"github.com/liggitt/tabwriter"
 	"github.com/spf13/cobra"
-	"io"
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
@@ -14,8 +17,6 @@ import (
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	"k8s.io/kubectl/pkg/util/printers"
 	"k8s.io/kubectl/pkg/util/templates"
-	"sort"
-	"strings"
 )
 
 var (

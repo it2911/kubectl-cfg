@@ -2,6 +2,8 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/it2911/kubectl-cfg/pkg/cmd/add"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/delete"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/list"
@@ -9,7 +11,6 @@ import (
 	"github.com/it2911/kubectl-cfg/pkg/cmd/use"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/version"
 	"k8s.io/kubectl/pkg/util/templates"
-	"strconv"
 
 	"github.com/spf13/cobra"
 

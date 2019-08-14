@@ -1,8 +1,9 @@
 package delete
 
 import (
-	"github.com/spf13/cobra"
 	"io"
+
+	"github.com/spf13/cobra"
 	"k8s.io/client-go/tools/clientcmd"
 	kubectlconfig "k8s.io/kubectl/pkg/cmd/config"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"

@@ -2,13 +2,14 @@ package main
 
 import (
 	"flag"
+	"os"
+
 	"github.com/it2911/kubectl-cfg/pkg/cmd"
 	"github.com/spf13/pflag"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
 	"k8s.io/klog"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
-	"os"
 )
 
 func init() {
