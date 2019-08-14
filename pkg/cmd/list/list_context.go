@@ -2,7 +2,6 @@ package list
 
 import (
 	"fmt"
-	"github.com/liggitt/tabwriter"
 	"github.com/spf13/cobra"
 	"io"
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
@@ -16,15 +15,9 @@ import (
 	"strings"
 	. "github.com/logrusorgru/aurora"
 	"github.com/juju/ansiterm"
+	"github.com/it2911/kubectl-cfg/pkg/util/printers"
 )
 
-const (
-	tabwriterMinWidth = 6
-	tabwriterWidth    = 4
-	tabwriterPadding  = 3
-	tabwriterPadChar  = ' '
-	tabwriterFlags    = tabwriter.RememberWidths
-)
 
 var (
 	listContextsLong = templates.LongDesc(`Displays context from the kubeconfig file.`)
@@ -104,7 +97,7 @@ func (o *ListContextOptions) RunList() error {
 
 	out, found := o.Out.(*ansiterm.TabWriter)
 	if !found {
-		out = ansiterm.NewTabWriter(o.Out, tabwriterMinWidth, tabwriterWidth, tabwriterPadding, tabwriterPadChar, tabwriterFlags)
+		out = printers.GetNewTabWriter(o.Out)
 		defer out.Flush()
 	}
 
