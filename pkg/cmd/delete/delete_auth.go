@@ -3,11 +3,13 @@ package delete
 import (
 	"fmt"
 	"io"
-
 	"github.com/spf13/cobra"
 	"k8s.io/client-go/tools/clientcmd"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	"k8s.io/kubectl/pkg/util/templates"
+	"gopkg.in/yaml.v2"
+	"os"
+	"time"
 )
 
 var (
@@ -33,6 +35,7 @@ func NewCmdCfgDeleteUser(out, errOut io.Writer, configAccess clientcmd.ConfigAcc
 
 func RunDeleteAuthInfo(out, errOut io.Writer, configAccess clientcmd.ConfigAccess, cmd *cobra.Command) error {
 	config, err := configAccess.GetStartingConfig()
+
 	if err != nil {
 		return err
 	}
@@ -49,7 +52,14 @@ func RunDeleteAuthInfo(out, errOut io.Writer, configAccess clientcmd.ConfigAcces
 	}
 
 	name := args[0]
-	_, ok := config.AuthInfos[name]
+
+	authInfo, ok := config.AuthInfos[name]
+
+	err = backup(out, errOut, authInfo, name)
+	if err != nil {
+		fmt.Println("warning: backup to yaml failed.")
+	}
+
 	if !ok {
 		return fmt.Errorf("cannot delete auth %s, not in %s", name, configFile)
 	}
@@ -69,4 +79,71 @@ func RunDeleteAuthInfo(out, errOut io.Writer, configAccess clientcmd.ConfigAcces
 	fmt.Fprintf(out, "deleted authinfo %s from %s\n", name, configFile)
 
 	return nil
+}
+
+
+func backup(out, errOut io.Writer, i interface{}, name string) error {
+	authInfos := map[string] interface{}{
+		"users" : map[string] interface{}{
+			"name" : name,
+			"user" : i,
+		},
+	}
+
+	return toYaml(out, errOut, authInfos, name)
+}
+
+func toYaml(out, errOut io.Writer, i interface{}, name string) error {
+	s, err := yaml.Marshal(i)
+	if err != nil {
+		return err
+	}
+
+
+	fileName := getKubeDir(out, errOut) + "/kubectl-cfg-delete-bak.yaml"
+	f, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0664)
+	defer f.Close()
+
+	if err != nil {
+		fmt.Fprint(errOut, err.Error())
+		return err
+	}
+
+	time := time.Now().Format("2006-01-02 15:04")
+	commentary := fmt.Sprintf("# [%s] delete backup of 'kubectl cfg delete auth %s'\n", time, name)
+	if _, err = f.WriteString(commentary); err != nil {
+		fmt.Println(err.Error())
+		return err
+	}
+
+	if _, err = f.Write(s); err != nil {
+		fmt.Fprint(errOut, err.Error())
+		return err
+	}
+
+	if _, err = f.WriteString("\n"); err != nil {
+		fmt.Fprint(errOut, err.Error())
+		return err
+	}
+
+	return nil
+}
+
+func getKubeDir(out, errOut io.Writer,) string {
+	homeDir, err := os.UserHomeDir()
+	if err != nil {
+		panic(err)
+	}
+
+	kubeDir := homeDir + "/.kube"
+
+	if _, err := os.Stat(kubeDir); err != nil {
+		if os.IsNotExist(err) {
+			fmt.Fprint(errOut, "Error: .kube directory doesn't exist.")
+		} else {
+			fmt.Fprint(errOut, "Error: get .kube directory error.")
+		}
+	}
+
+	return kubeDir
 }
