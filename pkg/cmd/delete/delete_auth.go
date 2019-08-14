@@ -57,7 +57,7 @@ func RunDeleteAuthInfo(out, errOut io.Writer, configAccess clientcmd.ConfigAcces
 	context := config.Contexts[config.CurrentContext]
 
 	if context.AuthInfo == name {
-		fmt.Fprint(errOut, "warning: this removed your active context, use \"kubectl config use-context\" to select a different one\n")
+		fmt.Fprint(errOut, "warning: this removed your active context, use \"kubectl config use-context\" to select another one\n")
 	}
 
 	delete(config.AuthInfos, name)
