@@ -28,7 +28,7 @@ kubectl-cfg current version is "v0.0.1".
 kubectl cfg list context
 ```
 
-![](https://raw.githubusercontent.com/77ImageHosting/repo1/master/imgrender1565399746354.gif)
+![](https://raw.githubusercontent.com/77ImageHosting/repo1/master/imgrender1565764238132.gif)
 
 More information
 
