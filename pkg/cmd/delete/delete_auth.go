@@ -58,6 +58,8 @@ func RunDeleteAuthInfo(out, errOut io.Writer, configAccess clientcmd.ConfigAcces
 	err = backup(errOut, authInfo, "auth", "user", name)
 	if err != nil {
 		fmt.Println("warning: backup to yaml failed.")
+	} else {
+		fmt.Println("info: deleted content backup to .kube/kubectl-cfg-delete-bak.yaml")
 	}
 
 	if !ok {

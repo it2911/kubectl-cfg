@@ -57,6 +57,8 @@ func RunDeleteContext(out, errOut io.Writer, configAccess clientcmd.ConfigAccess
 	err = backup(errOut, context, "context", "context", name)
 	if err != nil {
 		fmt.Println("warning: backup to yaml failed.")
+	} else {
+		fmt.Println("info: deleted content backup to .kube/kubectl-cfg-delete-bak.yaml")
 	}
 
 
