@@ -7,9 +7,8 @@ import (
 	"k8s.io/client-go/tools/clientcmd"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	"k8s.io/kubectl/pkg/util/templates"
-	"gopkg.in/yaml.v2"
-	"os"
-	"time"
+	"github.com/it2911/kubectl-cfg/pkg/util/yaml"
+
 )
 
 var (
@@ -55,7 +54,8 @@ func RunDeleteAuthInfo(out, errOut io.Writer, configAccess clientcmd.ConfigAcces
 
 	authInfo, ok := config.AuthInfos[name]
 
-	err = backup(out, errOut, authInfo, name)
+	//backup deleted content to yaml file
+	err = backup(errOut, authInfo, "auth", "user", name)
 	if err != nil {
 		fmt.Println("warning: backup to yaml failed.")
 	}
@@ -82,68 +82,14 @@ func RunDeleteAuthInfo(out, errOut io.Writer, configAccess clientcmd.ConfigAcces
 }
 
 
-func backup(out, errOut io.Writer, i interface{}, name string) error {
-	authInfos := map[string] interface{}{
-		"users" : map[string] interface{}{
+func backup(errOut io.Writer, i interface{}, op, key, name string) error {
+	t := map[string] interface{}{
+		key+"s" : map[string] interface{}{
 			"name" : name,
-			"user" : i,
+			key : i,
 		},
 	}
 
-	return toYaml(out, errOut, authInfos, name)
+	return yaml.WriteYaml(errOut, t, op, name)
 }
 
-func toYaml(out, errOut io.Writer, i interface{}, name string) error {
-	s, err := yaml.Marshal(i)
-	if err != nil {
-		return err
-	}
-
-
-	fileName := getKubeDir(out, errOut) + "/kubectl-cfg-delete-bak.yaml"
-	f, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0664)
-	defer f.Close()
-
-	if err != nil {
-		fmt.Fprint(errOut, err.Error())
-		return err
-	}
-
-	time := time.Now().Format("2006-01-02 15:04")
-	commentary := fmt.Sprintf("# [%s] delete backup of 'kubectl cfg delete auth %s'\n", time, name)
-	if _, err = f.WriteString(commentary); err != nil {
-		fmt.Println(err.Error())
-		return err
-	}
-
-	if _, err = f.Write(s); err != nil {
-		fmt.Fprint(errOut, err.Error())
-		return err
-	}
-
-	if _, err = f.WriteString("\n"); err != nil {
-		fmt.Fprint(errOut, err.Error())
-		return err
-	}
-
-	return nil
-}
-
-func getKubeDir(out, errOut io.Writer,) string {
-	homeDir, err := os.UserHomeDir()
-	if err != nil {
-		panic(err)
-	}
-
-	kubeDir := homeDir + "/.kube"
-
-	if _, err := os.Stat(kubeDir); err != nil {
-		if os.IsNotExist(err) {
-			fmt.Fprint(errOut, "Error: .kube directory doesn't exist.")
-		} else {
-			fmt.Fprint(errOut, "Error: get .kube directory error.")
-		}
-	}
-
-	return kubeDir
-}

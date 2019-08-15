@@ -27,7 +27,7 @@ func NewCmdCfgDelete(streams genericclioptions.IOStreams, configAccess clientcmd
 		Example:               deleteExample,
 		Run:                   cmdutil.DefaultSubCommandRun(streams.ErrOut),
 	}
-	cmd.AddCommand(NewCmdCfgDeleteCluster(streams.Out, configAccess))
+	cmd.AddCommand(NewCmdCfgDeleteCluster(streams.Out, streams.ErrOut, configAccess))
 	cmd.AddCommand(NewCmdCfgDeleteContext(streams.Out, streams.ErrOut, configAccess))
 	cmd.AddCommand(NewCmdCfgDeleteUser(streams.Out, streams.ErrOut, configAccess))
 
