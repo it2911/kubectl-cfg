@@ -155,7 +155,7 @@ func printContext(name string, context *clientcmdapi.Context, w io.Writer, nameO
 	var err error
 	if current {
 		prefix = "*"
-		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", Yellow(prefix), Yellow(name), Yellow(context.Cluster), Yellow(context.AuthInfo), Yellow(context.Namespace))
+		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", Green(prefix), Green(name), Green(context.Cluster), Green(context.AuthInfo), Green(context.Namespace))
 	} else {
 		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, context.Cluster, context.AuthInfo, context.Namespace)
 	}

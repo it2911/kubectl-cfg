@@ -6,6 +6,9 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/it2911/kubectl-cfg/pkg/util/printers"
+	"github.com/juju/ansiterm"
+	. "github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -14,10 +17,7 @@ import (
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 	. "k8s.io/kubectl/pkg/cmd/config"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
-	"github.com/it2911/kubectl-cfg/pkg/util/printers"
 	"k8s.io/kubectl/pkg/util/templates"
-	"github.com/juju/ansiterm"
-	. "github.com/logrusorgru/aurora"
 )
 
 var (
@@ -154,7 +154,6 @@ func printCluster(name string, cluster *clientcmdapi.Cluster, w io.Writer, nameO
 		return err
 	}
 
-
 	prefix := " "
 	statusCode := "UNKNOW"
 	//resp, err := http.Get(cluster.Server)
@@ -166,13 +165,10 @@ func printCluster(name string, cluster *clientcmdapi.Cluster, w io.Writer, nameO
 	var err error
 	if current {
 		prefix = "*"
-		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", Yellow(prefix), Yellow(name), Yellow(cluster.Server), Yellow(statusCode), "")
+		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", Green(prefix), Green(name), Green(cluster.Server), Green(statusCode), "")
 	} else {
 		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, cluster.Server, statusCode, "")
 	}
-
-
-
 
 	return err
 }

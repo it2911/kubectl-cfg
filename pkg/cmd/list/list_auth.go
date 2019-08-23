@@ -6,6 +6,9 @@ import (
 	"sort"
 	"strings"
 
+	"github.com/it2911/kubectl-cfg/pkg/util/printers"
+	"github.com/juju/ansiterm"
+	. "github.com/logrusorgru/aurora"
 	"github.com/spf13/cobra"
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/apimachinery/pkg/util/sets"
@@ -14,9 +17,6 @@ import (
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	"k8s.io/kubectl/pkg/util/templates"
-	"github.com/it2911/kubectl-cfg/pkg/util/printers"
-	"github.com/juju/ansiterm"
-	. "github.com/logrusorgru/aurora"
 )
 
 var (
@@ -155,7 +155,7 @@ func printAuthInfo(name string, authInfo *clientcmdapi.AuthInfo, w io.Writer, na
 	var err error
 	if current {
 		prefix = "*"
-		_, err = fmt.Fprintf(w, "%s\t%s\t%s\n", Yellow(prefix), Yellow(name), Yellow(authInfo.Username))
+		_, err = fmt.Fprintf(w, "%s\t%s\t%s\n", Green(prefix), Green(name), Green(authInfo.Username))
 	} else {
 		_, err = fmt.Fprintf(w, "%s\t%s\t%s\n", prefix, name, authInfo.Username)
 	}
