@@ -2,8 +2,9 @@ package use
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"io"
+
+	"github.com/spf13/cobra"
 	"k8s.io/client-go/tools/clientcmd"
 	kconf "k8s.io/kubectl/pkg/cmd/config"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"

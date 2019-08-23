@@ -2,11 +2,13 @@ package delete
 
 import (
 	"fmt"
-	"github.com/spf13/cobra"
 	"io"
+	"github.com/spf13/cobra"
 	"k8s.io/client-go/tools/clientcmd"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
 	"k8s.io/kubectl/pkg/util/templates"
+	"github.com/it2911/kubectl-cfg/pkg/util/yaml"
+
 )
 
 var (
@@ -32,6 +34,7 @@ func NewCmdCfgDeleteUser(out, errOut io.Writer, configAccess clientcmd.ConfigAcc
 
 func RunDeleteAuthInfo(out, errOut io.Writer, configAccess clientcmd.ConfigAccess, cmd *cobra.Command) error {
 	config, err := configAccess.GetStartingConfig()
+
 	if err != nil {
 		return err
 	}
@@ -48,7 +51,17 @@ func RunDeleteAuthInfo(out, errOut io.Writer, configAccess clientcmd.ConfigAcces
 	}
 
 	name := args[0]
-	_, ok := config.AuthInfos[name]
+
+	authInfo, ok := config.AuthInfos[name]
+
+	//backup deleted content to yaml file
+	err = backup(errOut, authInfo, "auth", "user", name)
+	if err != nil {
+		fmt.Println("warning: backup to yaml failed.")
+	} else {
+		fmt.Println("info: deleted content backup to .kube/kubectl-cfg-delete-bak.yaml")
+	}
+
 	if !ok {
 		return fmt.Errorf("cannot delete auth %s, not in %s", name, configFile)
 	}
@@ -56,7 +69,7 @@ func RunDeleteAuthInfo(out, errOut io.Writer, configAccess clientcmd.ConfigAcces
 	context := config.Contexts[config.CurrentContext]
 
 	if context.AuthInfo == name {
-		fmt.Fprint(errOut, "warning: this removed your active context, use \"kubectl config use-context\" to select a different one\n")
+		fmt.Fprint(errOut, "warning: this removed your active context, use \"kubectl config use-context\" to select another one\n")
 	}
 
 	delete(config.AuthInfos, name)
@@ -69,3 +82,16 @@ func RunDeleteAuthInfo(out, errOut io.Writer, configAccess clientcmd.ConfigAcces
 
 	return nil
 }
+
+
+func backup(errOut io.Writer, i interface{}, op, key, name string) error {
+	t := map[string] interface{}{
+		key+"s" : map[string] interface{}{
+			"name" : name,
+			key : i,
+		},
+	}
+
+	return yaml.WriteYaml(errOut, t, op, name)
+}
+

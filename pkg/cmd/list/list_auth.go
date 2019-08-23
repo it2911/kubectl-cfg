@@ -2,20 +2,21 @@ package list
 
 import (
 	"fmt"
-	"github.com/liggitt/tabwriter"
-	"github.com/spf13/cobra"
 	"io"
+	"sort"
+	"strings"
+
+	"github.com/it2911/kubectl-cfg/pkg/util/printers"
+	"github.com/juju/ansiterm"
+	. "github.com/logrusorgru/aurora"
+	"github.com/spf13/cobra"
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
 	"k8s.io/client-go/tools/clientcmd"
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
-	"k8s.io/kubectl/pkg/util/printers"
 	"k8s.io/kubectl/pkg/util/templates"
-	"sort"
-
-	"strings"
 )
 
 var (
@@ -92,7 +93,7 @@ func (o *ListAuthInfoOptions) RunList() error {
 		return err
 	}
 
-	out, found := o.Out.(*tabwriter.Writer)
+	out, found := o.Out.(*ansiterm.TabWriter)
 	if !found {
 		out = printers.GetNewTabWriter(o.Out)
 		defer out.Flush()
@@ -150,9 +151,14 @@ func printAuthInfo(name string, authInfo *clientcmdapi.AuthInfo, w io.Writer, na
 		return err
 	}
 	prefix := " "
+
+	var err error
 	if current {
 		prefix = "*"
+		_, err = fmt.Fprintf(w, "%s\t%s\t%s\n", Green(prefix), Green(name), Green(authInfo.Username))
+	} else {
+		_, err = fmt.Fprintf(w, "%s\t%s\t%s\n", prefix, name, authInfo.Username)
 	}
-	_, err := fmt.Fprintf(w, "%s\t%s\t%s\n", prefix, name, authInfo.Username)
+
 	return err
 }

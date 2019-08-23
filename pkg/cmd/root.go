@@ -2,14 +2,16 @@ package cmd
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/it2911/kubectl-cfg/pkg/cmd/add"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/delete"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/list"
+	"github.com/it2911/kubectl-cfg/pkg/cmd/rename"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/merge"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/use"
 	"github.com/it2911/kubectl-cfg/pkg/cmd/version"
 	"k8s.io/kubectl/pkg/util/templates"
-	"strconv"
 
 	"github.com/spf13/cobra"
 
@@ -44,6 +46,7 @@ func NewCmdCfg(f cmdutil.Factory, pathOptions *clientcmd.PathOptions, streams ge
 	cmd.AddCommand(add.NewCmdCfgAdd(streams, pathOptions))
 	cmd.AddCommand(delete.NewCmdCfgDelete(streams, pathOptions))
 	//cmd.AddCommand(get.NewCmdCfgGet(streams, pathOptions))
+	cmd.AddCommand(rename.NewCmdCfgRenameContext(streams, pathOptions))
 	cmd.AddCommand(list.NewCmdCfgList(streams, pathOptions))
 	cmd.AddCommand(use.NewCmdCfgUseContext(streams.Out, pathOptions))
 	cmd.AddCommand(merge.NewCmdCfgMerge(streams, pathOptions))

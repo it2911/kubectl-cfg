@@ -2,9 +2,14 @@ package list
 
 import (
 	"fmt"
-	"github.com/liggitt/tabwriter"
-	"github.com/spf13/cobra"
 	"io"
+	"sort"
+	"strings"
+
+	"github.com/it2911/kubectl-cfg/pkg/util/printers"
+	"github.com/juju/ansiterm"
+	. "github.com/logrusorgru/aurora"
+	"github.com/spf13/cobra"
 	utilerrors "k8s.io/apimachinery/pkg/util/errors"
 	"k8s.io/apimachinery/pkg/util/sets"
 	"k8s.io/cli-runtime/pkg/genericclioptions"
@@ -12,10 +17,7 @@ import (
 	clientcmdapi "k8s.io/client-go/tools/clientcmd/api"
 	. "k8s.io/kubectl/pkg/cmd/config"
 	cmdutil "k8s.io/kubectl/pkg/cmd/util"
-	"k8s.io/kubectl/pkg/util/printers"
 	"k8s.io/kubectl/pkg/util/templates"
-	"sort"
-	"strings"
 )
 
 var (
@@ -94,7 +96,7 @@ func (o *ListClusterOptions) RunList() error {
 		return err
 	}
 
-	out, found := o.Out.(*tabwriter.Writer)
+	out, found := o.Out.(*ansiterm.TabWriter)
 	if !found {
 		out = printers.GetNewTabWriter(o.Out)
 		defer out.Flush()
@@ -151,11 +153,8 @@ func printCluster(name string, cluster *clientcmdapi.Cluster, w io.Writer, nameO
 		_, err := fmt.Fprintf(w, "%s\n", name)
 		return err
 	}
-	prefix := " "
-	if current {
-		prefix = "*"
-	}
 
+	prefix := " "
 	statusCode := "UNKNOW"
 	//resp, err := http.Get(cluster.Server)
 	//if err != nil{
@@ -163,6 +162,13 @@ func printCluster(name string, cluster *clientcmdapi.Cluster, w io.Writer, nameO
 	//}
 	//statusCode = fmt.Sprint(resp.StatusCode)
 
-	_, err := fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, cluster.Server, statusCode, "")
+	var err error
+	if current {
+		prefix = "*"
+		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", Green(prefix), Green(name), Green(cluster.Server), Green(statusCode), "")
+	} else {
+		_, err = fmt.Fprintf(w, "%s\t%s\t%s\t%s\t%s\n", prefix, name, cluster.Server, statusCode, "")
+	}
+
 	return err
 }
